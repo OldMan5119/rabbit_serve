@@ -209,4 +209,10 @@ router.post('/login', function (req, res, next) {
     }
 });
 
+router.get('/test', function (req, res, next) {
+    res.json(success({
+        "token": "dkaj32j32ijr3ioj34i"
+    }))
+});
+
 module.exports = router;
