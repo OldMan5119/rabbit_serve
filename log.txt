@@ -1,0 +1,60 @@
+以下是我的express项目结构，当我访问http://localhost:3000/users/login时，页面出现Error: Failed to lookup view "error" in views directory "/Users/shixin/Documents/GitHub/rabbit_serve/views"
+    at Function.render (/Users/shixin/Documents/GitHub/rabbit_serve/node_modules/express/lib/application.js:580:17)报错，这是什么原因呢？
+
+project-root/
+├── app.js
+├── routes/
+│   ├── index.js      # 处理 / 路由，使用 EJS 渲染页面
+│   └── user.js      # 处理 /users 路由，返回用户json数据
+├── views/
+│   └── error.ejs
+│   └── footer.html
+│   └── header.html
+│   └── users.html
+└── package.json
+
+app.js的内容如下：
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+
+var app = express();
+
+// view engine setup
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
+app.engine('.html', require('ejs').__express);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;
