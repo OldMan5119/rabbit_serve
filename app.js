@@ -9,6 +9,7 @@ let fs = require('fs');
 
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
+let rabbitRouter = require('./routes/rabbit');
 
 let app = express();
 
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/rabbit', rabbitRouter);
 
 //<editor-fold desc="支持https请求">
 

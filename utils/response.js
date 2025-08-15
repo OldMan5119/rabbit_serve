@@ -4,7 +4,7 @@ exports.success = (data, message = '请求成功') => ({
     data
 });
 
-exports.error = (ret, message, data = {}) => ({
+exports.error = (ret, message = '请求失败', data = {}) => ({
     ret,
     msg: message,
     data
