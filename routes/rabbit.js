@@ -1,6 +1,11 @@
 const express = require('express');
 const {success, error} = require("../utils/response")
 const router = express.Router();
+const cors = require("../utils/cors")
+
+// 在所有路由定义前添加
+//router.use(cors)
+
 
 router.get('/getUserInfo', function (req, res, next) {
     const token = req.headers["authorization"]
@@ -19,10 +24,6 @@ router.get('/getUserInfo', function (req, res, next) {
     }
 });
 router.post('/login', function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'https://localhost:8080');
-    res.header('Access-Control-Allow-Methods', 'GET, POST');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-access-token');
-    res.header('Access-Control-Allow-Credentials', 'true');
     let name = req.body["name"]
     let passwd = req.body["password"]
     if (name === "zhangsan" && passwd === "1234") {
