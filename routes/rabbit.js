@@ -15,17 +15,23 @@ router.get('/getUserInfo', function (req, res, next) {
             "msg": "success",
             "data": {
                 "username": "管理员张牛",
-                "avatar": "http://gips0.baidu.com/it/u=3602773692,1512483864&fm=3028&app=3028&f=JPEG&fmt=auto?w=960&h=1280",
+                "introduction": "I am a super administrator",
+                "avatar": "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
+                "roles": [
+                    "admin"
+                ],
             }
         }
         res.json(success(userInfo))
     } else {
-        res.json(error())
+        res.json(error(-1))
     }
 });
 router.post('/login', function (req, res, next) {
     let name = req.body["name"]
     let passwd = req.body["password"]
+    const {body} = req;
+    console.log(body)
     if (name === "zhangsan" && passwd === "1234") {
         res.json(success({
             "token": "dkaj32j32ijr3ioj34i"
