@@ -11,16 +11,12 @@ router.get('/getUserInfo', function (req, res, next) {
     const token = req.headers["authorization"]
     if (token === "dkaj32j32ijr3ioj34i") {
         const userInfo = {
-            "ret": 0,
-            "msg": "success",
-            "data": {
-                "username": "管理员张牛",
-                "introduction": "I am a super administrator",
-                "avatar": "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-                "roles": [
-                    "admin"
-                ],
-            }
+            "username": "管理员张牛",
+            "introduction": "I am a super administrator",
+            "avatar": "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
+            "roles": [
+                "guest"
+            ],
         }
         res.json(success(userInfo))
     } else {
