@@ -10,6 +10,7 @@ let fs = require('fs');
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 let rabbitRouter = require('./routes/rabbit');
+let mysql = require('./routes/mysql');
 
 let app = express();
 
@@ -30,8 +31,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/rabbit', rabbitRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/rabbit', rabbitRouter);
+app.use('/api/sql', mysql);
 
 //<editor-fold desc="支持https请求">
 
@@ -57,6 +59,7 @@ httpsServer.listen(HTTPS_PORT, () => {
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
+    console.log("createError~~~~")
     next(createError(404));
 });
 

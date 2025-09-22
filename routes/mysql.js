@@ -1,11 +1,12 @@
 const express = require('express');
 const {success, error} = require("../utils/response")
-const router = express.Router();
+const sqlRouter = express.Router();
 const cors = require("../utils/cors")
-const mysql_db = require("mysql2/promise");
+const mysql_db = require('mysql2/promise');
 
 // 在所有路由定义前添加
-//router.use(cors)
+// sqlRouter.use(cors)
+
 // 数据库连接配置
 const dbConfig = {
     host: '8.130.114.25',
@@ -21,37 +22,8 @@ const dbConfig = {
 // 创建数据库连接池
 const pool = mysql_db.createPool(dbConfig);
 
-
-router.get('/getUserInfo', function (req, res, next) {
-    const token = req.headers["authorization"]
-    if (token === "dkaj32j32ijr3ioj34i") {
-        const userInfo = {
-            "username": "管理员张牛",
-            "introduction": "I am a super administrator",
-            "avatar": "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-            "roles": [
-                "guest"
-            ],
-        }
-        res.json(success(userInfo))
-    } else {
-        res.json(error(-1))
-    }
-});
-router.post('/login', function (req, res, next) {
-    let name = req.body["name"]
-    let passwd = req.body["password"]
-    const {body} = req;
-    console.log(body)
-    if (name === "zhangsan" && passwd === "1234") {
-        res.json(success({
-            "token": "dkaj32j32ijr3ioj34i"
-        }))
-    } else {
-        res.json(error(-1))
-    }
-});
-router.post('/execute', async (req, res) => {
+// 核心接口：执行客户端传入的SQL语句
+sqlRouter.post('/execute', async (req, res) => {
     const {sql} = req.body;
     // 验证输入
     if (!sql) {
@@ -86,4 +58,41 @@ router.post('/execute', async (req, res) => {
         });
     }
 });
-module.exports = router;
+
+sqlRouter.post('/test123', async (req, res) => {
+    const {sql} = req.body;
+    // 验证输入
+    if (!sql) {
+        return res.status(400).json({
+            success: false,
+            error: 'SQL语句不能为空'
+        });
+    }
+
+    console.info('执行SQL:', sql);
+
+    try {
+        // 执行SQL查询
+        const [results] = await pool.execute(sql);
+
+        // 返回成功结果
+        res.json({
+            success: true,
+            data: results,
+            message: 'SQL执行成功'
+        });
+    } catch (error) {
+        // 返回详细的错误信息
+        console.error('SQL执行错误:', error);
+        res.json({
+            success: false,
+            error: error.message,
+            code: error.code,
+            errno: error.errno,
+            sqlState: error.sqlState,
+            sqlMessage: error.sqlMessage
+        });
+    }
+});
+
+module.exports = sqlRouter;
